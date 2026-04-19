@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import ThemeToggle from './ThemeToggle'
 
 const NAV_LINKS = [
@@ -10,6 +12,7 @@ const NAV_LINKS = [
 ]
 
 export default function Navbar() {
+  const { user } = useAuth()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -57,15 +60,20 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
-            href="#login"
-            className="eg-btn-ghost hidden sm:inline-flex"
-          >
-            Sign in
-          </a>
-          <a href="#cta" className="eg-btn-primary hidden sm:inline-flex">
-            Get started
-          </a>
+          {user ? (
+            <Link to="/app" className="eg-btn-primary hidden sm:inline-flex">
+              Open app
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="eg-btn-ghost hidden sm:inline-flex">
+                Sign in
+              </Link>
+              <Link to="/signup" className="eg-btn-primary hidden sm:inline-flex">
+                Get started
+              </Link>
+            </>
+          )}
           <ThemeToggle />
           <button
             type="button"
@@ -110,9 +118,13 @@ export default function Navbar() {
                 {l.label}
               </a>
             ))}
-            <a href="#cta" className="eg-btn-primary mt-1 w-full">
-              Get started
-            </a>
+            <Link
+              to={user ? '/app' : '/signup'}
+              className="eg-btn-primary mt-1 w-full"
+              onClick={() => setOpen(false)}
+            >
+              {user ? 'Open app' : 'Get started'}
+            </Link>
           </div>
         </motion.div>
       )}

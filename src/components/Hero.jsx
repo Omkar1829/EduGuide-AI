@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 const container = {
   hidden: {},
@@ -61,9 +62,9 @@ export default function Hero() {
             variants={item}
             className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
-            <a href="#cta" className="eg-btn-primary px-6 py-3 text-base">
+            <Link to="/signup" className="eg-btn-primary px-6 py-3 text-base">
               Start learning free
-            </a>
+            </Link>
             <a
               href="#features"
               className="eg-btn-ghost px-6 py-3 text-base"

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 export default function CTA() {
   return (
@@ -22,12 +23,12 @@ export default function CTA() {
           EduGuide AI.
         </p>
         <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href="#"
+          <Link
+            to="/signup"
             className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-md transition-all hover:scale-[1.03] hover:shadow-lg"
           >
             Get started free
-          </a>
+          </Link>
           <a
             href="#features"
             className="inline-flex items-center justify-center rounded-xl border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"

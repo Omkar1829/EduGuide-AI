@@ -27,12 +27,17 @@ export default defineConfig([
       // (ESLint doesn't always count `<motion.div>` as a reference).
       'no-unused-vars': [
         'error',
-        { varsIgnorePattern: '^(motion|[A-Z_])', argsIgnorePattern: '^_' },
+        {
+          varsIgnorePattern: '^(motion|[A-Z_])',
+          argsIgnorePattern: '^(Icon|_)',
+        },
       ],
       // The Date.now() call lives inside an event handler, not during render.
       'react-hooks/purity': 'off',
       // Fast-refresh restrictions are noisy for small context files that also export the hook.
       'react-refresh/only-export-components': 'off',
+      // We use setState in effects intentionally for localStorage sync and cross-user reloads.
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 ])
