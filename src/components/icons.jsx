@@ -263,3 +263,52 @@ export const TrophyIcon = (p) => (
     <path d="M18 2H6v7a6 6 0 0 0 12 0z" />
   </svg>
 )
+export const CpuIcon = (p) => (
+  <svg {...baseProps} {...p}>
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+    <rect x="9" y="9" width="6" height="6" />
+    <line x1="9" y1="2" x2="9" y2="4" />
+    <line x1="15" y1="2" x2="15" y2="4" />
+    <line x1="9" y1="20" x2="9" y2="22" />
+    <line x1="15" y1="20" x2="15" y2="22" />
+    <line x1="20" y1="9" x2="22" y2="9" />
+    <line x1="20" y1="14" x2="22" y2="14" />
+    <line x1="2" y1="9" x2="4" y2="9" />
+    <line x1="2" y1="14" x2="4" y2="14" />
+  </svg>
+)
+export const RouteIcon = (p) => (
+  <svg {...baseProps} {...p}>
+    <circle cx="6" cy="19" r="3" />
+    <circle cx="18" cy="5" r="3" />
+    <path d="M6 16V9a3 3 0 0 1 3-3h6" />
+    <path d="M18 8v7a3 3 0 0 1-3 3H9" />
+  </svg>
+)
+export const ClipboardCheckIcon = (p) => (
+  <svg {...baseProps} {...p}>
+    <rect x="8" y="2" width="8" height="4" rx="1" />
+    <path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3" />
+    <path d="m9 14 2 2 4-4" />
+  </svg>
+)
+export const CheckCircleIcon = (p) => (
+  <svg {...baseProps} {...p}>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <polyline points="22 4 12 14.01 9 11.01" />
+  </svg>
+)
+export const XCircleIcon = (p) => (
+  <svg {...baseProps} {...p}>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="15" y1="9" x2="9" y2="15" />
+    <line x1="9" y1="9" x2="15" y2="15" />
+  </svg>
+)
+export const RefreshIcon = (p) => (
+  <svg {...baseProps} {...p}>
+    <polyline points="23 4 23 10 17 10" />
+    <polyline points="1 20 1 14 7 14" />
+    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+  </svg>
+)

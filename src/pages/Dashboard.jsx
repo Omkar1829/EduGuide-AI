@@ -2,10 +2,12 @@ import { motion } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useAdmin } from '../context/AdminContext'
 import { useLearning } from '../context/LearningContext'
 import { useVault, VAULT_CATEGORIES } from '../context/VaultContext'
 import { COURSES } from '../data/courses'
 import { PROFILE, STREAMS } from '../data/aiProfile'
+import { AI_PROVIDERS_CATALOG } from '../data/admin'
 import CourseCard from '../components/CourseCard'
 import {
   BookIcon,
@@ -35,7 +37,7 @@ function miniReply(input) {
 
 /* ----------------------------- AI Recommendation --------------------------- */
 
-function RecommendationCard({ stream, data }) {
+function RecommendationCard({ stream, data, modelBadge }) {
   return (
     <motion.section
       key={stream}
@@ -50,9 +52,16 @@ function RecommendationCard({ stream, data }) {
       />
       <div className="relative grid gap-6 lg:grid-cols-[1fr_220px] lg:items-center">
         <div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium backdrop-blur">
-            <SparkleIcon className="h-3.5 w-3.5" /> AI Recommendation
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium backdrop-blur">
+              <SparkleIcon className="h-3.5 w-3.5" /> AI Recommendation
+            </span>
+            {modelBadge && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/20 px-2.5 py-1 font-mono text-[11px] text-white/90 backdrop-blur">
+                Powered by {modelBadge}
+              </span>
+            )}
+          </div>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
             Recommended stream:{' '}
             <span className="underline decoration-white/40 decoration-2 underline-offset-4">
@@ -514,10 +523,20 @@ function StatCard({ label, value, hint, Icon, tint, delay = 0 }) {
 export default function Dashboard() {
   const { user } = useAuth()
   const { enrollments, progressFor } = useLearning()
+  const { taskRouting, providers } = useAdmin()
   const navigate = useNavigate()
 
   const [stream, setStream] = useState('Science')
   const data = PROFILE[stream]
+
+  const recoModelBadge = useMemo(() => {
+    const t = taskRouting?.recommendation
+    if (!t?.enabled) return null
+    const p = providers?.[t.provider]
+    if (!p?.enabled || p.status !== 'connected') return null
+    const name = AI_PROVIDERS_CATALOG.find((x) => x.id === t.provider)?.name || t.provider
+    return `${name} · ${t.model}`
+  }, [taskRouting, providers])
 
   const enrolledCourses = useMemo(
     () =>
@@ -552,7 +571,7 @@ export default function Dashboard() {
       </div>
 
       {/* 1 — AI Recommendation */}
-      <RecommendationCard stream={stream} data={data} />
+      <RecommendationCard stream={stream} data={data} modelBadge={recoModelBadge} />
 
       {/* 2 & 6 — Multi-factor + What-If side by side */}
       <div className="grid gap-6 lg:grid-cols-3">
