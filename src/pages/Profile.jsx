@@ -89,6 +89,53 @@ export default function Profile() {
         </div>
       </motion.section>
 
+      {user?.education && (
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.05 }}
+          className="eg-card"
+        >
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Education details
+            </h2>
+            <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-[11px] font-medium text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+              Captured at signup
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Used to personalise AI recommendations. Update via the admin panel or re-register to change.
+          </p>
+          <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { label: 'Level', value: user.education.levelLabel || user.education.level },
+              { label: 'Stream', value: user.education.stream },
+              { label: 'Institution', value: user.education.institution },
+              { label: 'Board / university', value: user.education.board || '—' },
+              { label: 'Current year / class', value: user.education.currentYear || '—' },
+              {
+                label: 'Latest score',
+                value: user.education.percentage ? `${user.education.percentage}%` : '—',
+              },
+              { label: 'Phone', value: user.phone || '—' },
+            ].map((row) => (
+              <div
+                key={row.label}
+                className="rounded-xl border border-gray-200 px-3 py-2 dark:border-gray-700"
+              >
+                <dt className="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  {row.label}
+                </dt>
+                <dd className="mt-0.5 text-sm font-medium text-gray-900 dark:text-white">
+                  {row.value || '—'}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </motion.section>
+      )}
+
       <section className="eg-card">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
           Edit profile
