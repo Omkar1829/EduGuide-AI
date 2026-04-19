@@ -32,7 +32,14 @@ export function AuthProvider({ children }) {
     }
   }, [user])
 
-  const login = useCallback(async ({ email, password }) => {
+  const inferRole = (email) => {
+    const e = (email || '').toLowerCase()
+    if (e === 'admin@eduguide.ai' || e.startsWith('admin@') || e.startsWith('admin+'))
+      return 'admin'
+    return 'student'
+  }
+
+  const login = useCallback(async ({ email, password, role }) => {
     // Client-side mock: accept any email + non-empty password.
     if (!email || !password) {
       throw new Error('Please enter your email and password.')
@@ -47,6 +54,7 @@ export function AuthProvider({ children }) {
       name: name.charAt(0).toUpperCase() + name.slice(1),
       joinedAt: new Date().toISOString(),
       plan: 'Free',
+      role: role || inferRole(email),
     }
     setUser(next)
     return next
@@ -68,6 +76,7 @@ export function AuthProvider({ children }) {
       name,
       joinedAt: new Date().toISOString(),
       plan: 'Free',
+      role: inferRole(email),
     }
     setUser(next)
     return next

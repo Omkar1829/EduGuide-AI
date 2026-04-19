@@ -6,17 +6,22 @@ import ThemeToggle from './ThemeToggle'
 import Chatbot from './Chatbot'
 import {
   BookIcon,
+  BrainIcon,
   CloseIcon,
+  FolderIcon,
   HomeIcon,
   LogoutIcon,
   MenuIcon,
   SettingsIcon,
+  ShieldIcon,
   UserIcon,
 } from './icons'
 
 const NAV_ITEMS = [
   { to: '/app', label: 'Dashboard', Icon: HomeIcon, end: true },
+  { to: '/app/tutor', label: 'AI Tutor', Icon: BrainIcon },
   { to: '/app/courses', label: 'Courses', Icon: BookIcon },
+  { to: '/app/vault', label: 'Academic Vault', Icon: FolderIcon },
   { to: '/app/profile', label: 'Profile', Icon: UserIcon },
   { to: '/app/settings', label: 'Settings', Icon: SettingsIcon },
 ]
@@ -69,13 +74,22 @@ function SidebarContent({ onNavigate }) {
               }`
             }
           >
-            <Icon className="h-4.5 w-4.5" />
+            <Icon className="h-5 w-5 shrink-0" />
             <span>{label}</span>
           </NavLink>
         ))}
       </nav>
 
       <div className="mt-4 border-t border-gray-200 p-3 dark:border-gray-800">
+        {user?.role === 'admin' && (
+          <NavLink
+            to="/admin"
+            onClick={onNavigate}
+            className="mb-2 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600/90 to-purple-600/90 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-[1.01]"
+          >
+            <ShieldIcon className="h-4 w-4" /> Open admin panel
+          </NavLink>
+        )}
         <NavLink
           to="/app/profile"
           onClick={onNavigate}

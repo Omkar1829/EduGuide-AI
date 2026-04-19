@@ -34,6 +34,19 @@ export default function Login() {
     setPassword('demo1234')
   }
 
+  const loginAsAdmin = async () => {
+    setError('')
+    setLoading(true)
+    try {
+      await login({ email: 'admin@eduguide.ai', password: 'admin1234', role: 'admin' })
+      navigate('/admin', { replace: true })
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
       <div
@@ -127,6 +140,15 @@ export default function Login() {
                 className="w-full rounded-xl border border-dashed border-gray-300 px-4 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
               >
                 Use demo credentials
+              </button>
+
+              <button
+                type="button"
+                onClick={loginAsAdmin}
+                disabled={loading}
+                className="w-full rounded-xl border border-indigo-200 bg-indigo-50/70 px-4 py-2.5 text-sm font-medium text-indigo-700 transition-colors hover:bg-indigo-100 disabled:opacity-60 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-200 dark:hover:bg-indigo-500/20"
+              >
+                Sign in as Admin →
               </button>
             </form>
 

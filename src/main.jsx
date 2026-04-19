@@ -6,6 +6,8 @@ import App from './App.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { LearningProvider } from './context/LearningContext.jsx'
+import { VaultProvider } from './context/VaultContext.jsx'
+import { AdminProvider } from './context/AdminContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,7 +15,11 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <AuthProvider>
           <LearningProvider>
-            <App />
+            <VaultProvider>
+              <AdminProvider>
+                <App />
+              </AdminProvider>
+            </VaultProvider>
           </LearningProvider>
         </AuthProvider>
       </ThemeProvider>
