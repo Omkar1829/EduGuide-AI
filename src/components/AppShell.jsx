@@ -9,6 +9,7 @@ import {
   BookIcon,
   BrainIcon,
   CloseIcon,
+  FileTextIcon,
   FolderIcon,
   HelpIcon,
   HomeIcon,
@@ -23,12 +24,13 @@ import {
 
 const NAV_ITEMS = [
   { to: '/app', label: 'Dashboard', Icon: HomeIcon, end: true },
-  { to: '/app/tutor', label: 'AI Tutor', Icon: BrainIcon },
+  { to: '/app/tutor', label: 'Learning Hub', Icon: BrainIcon },
   { to: '/app/quiz', label: 'Adaptive Quiz', Icon: HelpIcon },
   { to: '/app/games', label: 'Knowledge Games', Icon: TargetIcon },
   { to: '/app/leaderboard', label: 'Leaderboard', Icon: TrophyIcon },
   { to: '/app/courses', label: 'Courses', Icon: BookIcon },
   { to: '/app/vault', label: 'Academic Vault', Icon: FolderIcon },
+  { to: '/app/resume', label: 'Resume', Icon: FileTextIcon },
   { to: '/app/profile', label: 'Profile', Icon: UserIcon },
   { to: '/app/settings', label: 'Settings', Icon: SettingsIcon },
 ]

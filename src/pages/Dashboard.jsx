@@ -5,10 +5,24 @@ import { useAuth } from '../context/AuthContext'
 import { useAdmin } from '../context/AdminContext'
 import { useLearning } from '../context/LearningContext'
 import { useVault, VAULT_CATEGORIES } from '../context/VaultContext'
+import { useGames } from '../context/GamesContext'
+import { useActivity } from '../context/ActivityContext'
 import { COURSES } from '../data/courses'
 import { PROFILE, STREAMS } from '../data/aiProfile'
 import { AI_PROVIDERS_CATALOG } from '../data/admin'
 import CourseCard from '../components/CourseCard'
+import TodayChallenge from '../components/learning/TodayChallenge'
+import MiniLeaderboard from '../components/learning/MiniLeaderboard'
+import StreakHeatmap from '../components/learning/StreakHeatmap'
+import WeeklyGoals from '../components/learning/WeeklyGoals'
+import RecentActivity from '../components/learning/RecentActivity'
+import SmartReminders from '../components/learning/SmartReminders'
+import {
+  myResultsOf,
+  proficiencyMap,
+  streakDays,
+  currentStreak,
+} from '../utils/proficiency'
 import {
   BookIcon,
   BrainIcon,
@@ -524,7 +538,52 @@ export default function Dashboard() {
   const { user } = useAuth()
   const { enrollments, progressFor } = useLearning()
   const { taskRouting, providers } = useAdmin()
+  const { results } = useGames()
+  const { documents } = useVault()
+  const { events } = useActivity()
   const navigate = useNavigate()
+
+  const myResults = useMemo(
+    () => myResultsOf(results, user?.id),
+    [results, user?.id],
+  )
+  const proficiency = useMemo(() => proficiencyMap(myResults), [myResults])
+
+  const activityTimestamps = useMemo(() => {
+    const fromGames = myResults.map((r) => r.ts).filter(Boolean)
+    const fromEvents = (events || []).map((e) => e.ts).filter(Boolean)
+    return [...fromGames, ...fromEvents]
+  }, [myResults, events])
+  const heatmapDays = useMemo(
+    () => streakDays({ activityTimestamps, days: 84 }),
+    [activityTimestamps],
+  )
+  const streak = currentStreak(activityTimestamps)
+
+  const recentItems = useMemo(() => {
+    const fromGames = myResults.slice(0, 6).map((r) => ({
+      id: `g-${r.id}`,
+      ts: r.ts,
+      label: `Played ${r.subjectId} round — ${r.accuracy}% accuracy`,
+      icon: '🎮',
+    }))
+    const fromDocs = (documents || []).slice(0, 3).map((d) => ({
+      id: `d-${d.id}`,
+      ts: new Date(d.uploadedAt).getTime(),
+      label: `Uploaded ${d.name}`,
+      icon: '📄',
+    }))
+    const fromCourses = Object.entries(enrollments || {}).map(([cid, e]) => ({
+      id: `c-${cid}`,
+      ts: new Date(e.enrolledAt || Date.now()).getTime(),
+      label: `Enrolled in ${COURSES.find((c) => c.id === cid)?.title || cid}`,
+      icon: '📚',
+    }))
+    return [...fromGames, ...fromDocs, ...fromCourses]
+      .filter((i) => i.ts)
+      .sort((a, b) => b.ts - a.ts)
+      .slice(0, 6)
+  }, [myResults, documents, enrollments])
 
   const [stream, setStream] = useState('Science')
   const data = PROFILE[stream]
@@ -580,6 +639,31 @@ export default function Dashboard() {
         </div>
         <WhatIf active={stream} onChange={setStream} />
       </div>
+
+      <SmartReminders proficiency={proficiency} myResults={myResults} />
+
+      {/* Today's challenge + mini leaderboard */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <TodayChallenge proficiency={proficiency} userId={user?.id} />
+        </div>
+        <MiniLeaderboard
+          results={results}
+          userId={user?.id}
+          stream={user?.education?.stream}
+        />
+      </div>
+
+      {/* Streak + Weekly goals */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <StreakHeatmap days={heatmapDays} currentStreak={streak} />
+        </div>
+        <WeeklyGoals />
+      </div>
+
+      {/* Recent activity */}
+      <RecentActivity items={recentItems} />
 
       {/* Data Source — wires the Academic Vault into AI confidence */}
       <DataSource />
