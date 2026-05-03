@@ -27,6 +27,8 @@ import AdminAITasks from './admin/pages/AdminAITasks'
 import AdminAIReview from './admin/pages/AdminAIReview'
 import AdminAnalytics from './admin/pages/AdminAnalytics'
 import AdaptiveQuiz from './pages/AdaptiveQuiz'
+import Games from './pages/Games'
+import Leaderboard from './pages/Leaderboard'
 
 export default function App() {
   return (
@@ -46,6 +48,8 @@ export default function App() {
         <Route index element={<Dashboard />} />
         <Route path="tutor" element={<AITutor />} />
         <Route path="quiz" element={<AdaptiveQuiz />} />
+        <Route path="games" element={<Games />} />
+        <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="vault" element={<Vault />} />
         <Route path="courses" element={<Courses />} />
         <Route path="courses/:courseId" element={<CourseDetail />} />
