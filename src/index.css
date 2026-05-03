@@ -66,3 +66,29 @@
 .eg-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* Print styles: only show the resume preview when printing. */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  .resume-preview,
+  .resume-preview * {
+    visibility: visible !important;
+  }
+  .resume-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  @page {
+    margin: 12mm;
+  }
+}

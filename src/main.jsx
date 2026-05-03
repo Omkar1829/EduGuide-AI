@@ -10,6 +10,7 @@ import { VaultProvider } from './context/VaultContext.jsx'
 import { AdminProvider } from './context/AdminContext.jsx'
 import { PresenceProvider } from './context/PresenceContext.jsx'
 import { GamesProvider } from './context/GamesContext.jsx'
+import { ActivityProvider } from './context/ActivityContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,7 +22,9 @@ createRoot(document.getElementById('root')).render(
               <AdminProvider>
                 <PresenceProvider>
                   <GamesProvider>
-                    <App />
+                    <ActivityProvider>
+                      <App />
+                    </ActivityProvider>
                   </GamesProvider>
                 </PresenceProvider>
               </AdminProvider>

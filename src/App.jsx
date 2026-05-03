@@ -3,7 +3,8 @@ import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
-import AITutor from './pages/AITutor'
+import LearningHub from './pages/LearningHub'
+import ResumeBuilder from './pages/Resume'
 import Courses from './pages/Courses'
 import Vault from './pages/Vault'
 import CourseDetail from './pages/CourseDetail'
@@ -46,7 +47,9 @@ export default function App() {
         }
       >
         <Route index element={<Dashboard />} />
-        <Route path="tutor" element={<AITutor />} />
+        <Route path="tutor" element={<LearningHub />} />
+        <Route path="hub" element={<Navigate to="/app/tutor" replace />} />
+        <Route path="resume" element={<ResumeBuilder />} />
         <Route path="quiz" element={<AdaptiveQuiz />} />
         <Route path="games" element={<Games />} />
         <Route path="leaderboard" element={<Leaderboard />} />
