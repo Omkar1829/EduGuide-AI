@@ -9,6 +9,7 @@ import {
   BrainIcon,
   CloseIcon,
   FolderIcon,
+  HelpIcon,
   HomeIcon,
   LogoutIcon,
   MenuIcon,
@@ -20,6 +21,7 @@ import {
 const NAV_ITEMS = [
   { to: '/app', label: 'Dashboard', Icon: HomeIcon, end: true },
   { to: '/app/tutor', label: 'AI Tutor', Icon: BrainIcon },
+  { to: '/app/quiz', label: 'Adaptive Quiz', Icon: HelpIcon },
   { to: '/app/courses', label: 'Courses', Icon: BookIcon },
   { to: '/app/vault', label: 'Academic Vault', Icon: FolderIcon },
   { to: '/app/profile', label: 'Profile', Icon: UserIcon },

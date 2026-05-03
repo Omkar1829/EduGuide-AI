@@ -7,12 +7,15 @@ import {
   BarChartIcon,
   BookIcon,
   BriefcaseIcon,
+  ClipboardCheckIcon,
   CloseIcon,
+  CpuIcon,
   FolderIcon,
   HelpIcon,
   HomeIcon,
   LogoutIcon,
   MenuIcon,
+  RouteIcon,
   ShieldIcon,
   SlidersIcon,
   UsersIcon,
@@ -25,7 +28,12 @@ const NAV_ITEMS = [
   { to: '/admin/courses', label: 'Courses', Icon: BookIcon },
   { to: '/admin/jobs', label: 'Jobs', Icon: BriefcaseIcon },
   { to: '/admin/quiz', label: 'Quiz', Icon: HelpIcon },
-  { to: '/admin/ai-config', label: 'AI Configuration', Icon: SlidersIcon },
+  { group: 'AI' },
+  { to: '/admin/ai-providers', label: 'AI Providers', Icon: CpuIcon },
+  { to: '/admin/ai-tasks', label: 'Task Routing', Icon: RouteIcon },
+  { to: '/admin/ai-review', label: 'Review Queue', Icon: ClipboardCheckIcon },
+  { to: '/admin/ai-config', label: 'Weights', Icon: SlidersIcon },
+  { group: 'Insights' },
   { to: '/admin/analytics', label: 'Analytics', Icon: BarChartIcon },
 ]
 
@@ -55,25 +63,38 @@ function Sidebar({ onNavigate }) {
         </span>
       </NavLink>
 
-      <nav className="flex-1 space-y-1 px-3">
-        {NAV_ITEMS.map(({ to, label, Icon, end }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            onClick={onNavigate}
-            className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
-              }`
-            }
-          >
-            <Icon className="h-5 w-5 shrink-0" />
-            <span>{label}</span>
-          </NavLink>
-        ))}
+      <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 pb-2">
+        {NAV_ITEMS.map((item, idx) => {
+          if (item.group) {
+            return (
+              <p
+                key={`grp-${idx}`}
+                className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500"
+              >
+                {item.group}
+              </p>
+            )
+          }
+          const { to, label, Icon, end } = item
+          return (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              onClick={onNavigate}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                }`
+              }
+            >
+              <Icon className="h-5 w-5 shrink-0" />
+              <span>{label}</span>
+            </NavLink>
+          )
+        })}
       </nav>
 
       <div className="mt-4 border-t border-gray-200 p-3 dark:border-gray-800">
