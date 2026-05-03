@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { usePresence } from '../context/PresenceContext'
 import ThemeToggle from './ThemeToggle'
 import Chatbot from './Chatbot'
 import {
@@ -9,22 +10,44 @@ import {
   BrainIcon,
   CloseIcon,
   FolderIcon,
+  HelpIcon,
   HomeIcon,
   LogoutIcon,
   MenuIcon,
   SettingsIcon,
   ShieldIcon,
+  TargetIcon,
+  TrophyIcon,
   UserIcon,
 } from './icons'
 
 const NAV_ITEMS = [
   { to: '/app', label: 'Dashboard', Icon: HomeIcon, end: true },
   { to: '/app/tutor', label: 'AI Tutor', Icon: BrainIcon },
+  { to: '/app/quiz', label: 'Adaptive Quiz', Icon: HelpIcon },
+  { to: '/app/games', label: 'Knowledge Games', Icon: TargetIcon },
+  { to: '/app/leaderboard', label: 'Leaderboard', Icon: TrophyIcon },
   { to: '/app/courses', label: 'Courses', Icon: BookIcon },
   { to: '/app/vault', label: 'Academic Vault', Icon: FolderIcon },
   { to: '/app/profile', label: 'Profile', Icon: UserIcon },
   { to: '/app/settings', label: 'Settings', Icon: SettingsIcon },
 ]
+
+function PresencePill() {
+  const { online } = usePresence()
+  return (
+    <span
+      title="Students online right now"
+      className="hidden items-center gap-2 rounded-full border border-mint-200 bg-mint-50 px-3 py-1 text-xs font-medium text-mint-700 sm:inline-flex dark:border-mint-500/30 dark:bg-mint-500/10 dark:text-mint-300"
+    >
+      <span className="relative inline-flex h-2 w-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint-400 opacity-60" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-mint-500" />
+      </span>
+      {online} students online
+    </span>
+  )
+}
 
 function SidebarContent({ onNavigate }) {
   const { user, logout } = useAuth()
@@ -177,8 +200,9 @@ export default function AppShell() {
               Welcome back — let&apos;s keep the streak going.
             </p>
             <div className="ml-auto flex items-center gap-2">
-              <NavLink to="/app/courses" className="eg-btn-primary hidden sm:inline-flex">
-                Browse courses
+              <PresencePill />
+              <NavLink to="/app/games" className="hidden eg-btn-ghost border border-gray-200 dark:border-gray-700 sm:inline-flex">
+                Play games
               </NavLink>
               <ThemeToggle />
               <button

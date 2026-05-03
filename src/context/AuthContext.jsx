@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
     return next
   }, [])
 
-  const signup = useCallback(async ({ name, email, password }) => {
+  const signup = useCallback(async ({ name, email, password, phone, education }) => {
     if (!name || !email || !password) {
       throw new Error('All fields are required.')
     }
@@ -70,13 +70,18 @@ export function AuthProvider({ children }) {
     if (password.length < 6) {
       throw new Error('Password must be at least 6 characters.')
     }
+    if (!education || !education.level) {
+      throw new Error('Please provide your education details.')
+    }
     const next = {
       id: 'u_' + Math.random().toString(36).slice(2, 10),
       email,
       name,
+      phone: phone || '',
       joinedAt: new Date().toISOString(),
       plan: 'Free',
       role: inferRole(email),
+      education,
     }
     setUser(next)
     return next

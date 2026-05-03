@@ -22,7 +22,13 @@ import AdminCourses from './admin/pages/AdminCourses'
 import AdminJobs from './admin/pages/AdminJobs'
 import AdminQuiz from './admin/pages/AdminQuiz'
 import AdminAIConfig from './admin/pages/AdminAIConfig'
+import AdminAIProviders from './admin/pages/AdminAIProviders'
+import AdminAITasks from './admin/pages/AdminAITasks'
+import AdminAIReview from './admin/pages/AdminAIReview'
 import AdminAnalytics from './admin/pages/AdminAnalytics'
+import AdaptiveQuiz from './pages/AdaptiveQuiz'
+import Games from './pages/Games'
+import Leaderboard from './pages/Leaderboard'
 
 export default function App() {
   return (
@@ -41,6 +47,9 @@ export default function App() {
       >
         <Route index element={<Dashboard />} />
         <Route path="tutor" element={<AITutor />} />
+        <Route path="quiz" element={<AdaptiveQuiz />} />
+        <Route path="games" element={<Games />} />
+        <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="vault" element={<Vault />} />
         <Route path="courses" element={<Courses />} />
         <Route path="courses/:courseId" element={<CourseDetail />} />
@@ -63,6 +72,9 @@ export default function App() {
         <Route path="courses" element={<AdminCourses />} />
         <Route path="jobs" element={<AdminJobs />} />
         <Route path="quiz" element={<AdminQuiz />} />
+        <Route path="ai-providers" element={<AdminAIProviders />} />
+        <Route path="ai-tasks" element={<AdminAITasks />} />
+        <Route path="ai-review" element={<AdminAIReview />} />
         <Route path="ai-config" element={<AdminAIConfig />} />
         <Route path="analytics" element={<AdminAnalytics />} />
       </Route>

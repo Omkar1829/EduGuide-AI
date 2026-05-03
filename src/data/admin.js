@@ -250,6 +250,217 @@ export const DEFAULT_AI_WEIGHTS = {
   strength: 15,
 }
 
+// ---- AI Providers & Task Routing ----
+
+export const AI_PROVIDERS_CATALOG = [
+  {
+    id: 'groq',
+    name: 'Groq',
+    tagline: 'Ultra-low latency Llama + Mixtral',
+    keyLabel: 'GROQ_API_KEY',
+    keyUrl: 'https://console.groq.com/keys',
+    needsBaseUrl: false,
+    models: [
+      'llama-3.1-70b-versatile',
+      'llama-3.1-8b-instant',
+      'mixtral-8x7b-32768',
+      'gemma2-9b-it',
+    ],
+  },
+  {
+    id: 'google',
+    name: 'Google Gemini / Gemma',
+    tagline: 'Gemini 1.5 Pro and open Gemma models',
+    keyLabel: 'GOOGLE_API_KEY',
+    keyUrl: 'https://aistudio.google.com/app/apikey',
+    needsBaseUrl: false,
+    models: ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemma-2-27b-it', 'gemma-2-9b-it'],
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI',
+    tagline: 'GPT-4o family',
+    keyLabel: 'OPENAI_API_KEY',
+    keyUrl: 'https://platform.openai.com/api-keys',
+    needsBaseUrl: false,
+    models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo'],
+  },
+  {
+    id: 'anthropic',
+    name: 'Anthropic',
+    tagline: 'Claude 3.5 Sonnet, Haiku, Opus',
+    keyLabel: 'ANTHROPIC_API_KEY',
+    keyUrl: 'https://console.anthropic.com/settings/keys',
+    needsBaseUrl: false,
+    models: ['claude-3-5-sonnet', 'claude-3-5-haiku', 'claude-3-opus'],
+  },
+  {
+    id: 'ollama',
+    name: 'Ollama (self-hosted)',
+    tagline: 'Run Llama / Gemma locally',
+    keyLabel: null,
+    keyUrl: 'https://ollama.com/download',
+    needsBaseUrl: true,
+    defaultBaseUrl: 'http://localhost:11434',
+    models: ['llama3.1:8b', 'llama3.1:70b', 'gemma2:9b', 'mistral:7b'],
+  },
+]
+
+export const DEFAULT_PROVIDERS = {
+  groq: {
+    enabled: true,
+    apiKey: '',
+    baseUrl: '',
+    status: 'connected',
+    updatedAt: '2026-04-18T10:00:00Z',
+  },
+  google: { enabled: true, apiKey: '', baseUrl: '', status: 'connected', updatedAt: '2026-04-18T10:02:00Z' },
+  openai: { enabled: false, apiKey: '', baseUrl: '', status: 'disabled' },
+  anthropic: { enabled: false, apiKey: '', baseUrl: '', status: 'disabled' },
+  ollama: { enabled: false, apiKey: '', baseUrl: 'http://localhost:11434', status: 'disabled' },
+}
+
+export const AI_TASKS = [
+  {
+    id: 'recommendation',
+    label: 'Career recommendation',
+    description: 'Picks stream + role and confidence from academic + interest signals.',
+  },
+  {
+    id: 'adaptive_quiz',
+    label: 'Adaptive quiz generation',
+    description: 'Generates unique questions per student tuned to their current skill band.',
+  },
+  {
+    id: 'tutor',
+    label: 'AI tutor chat',
+    description: 'Powers the /app/tutor conversation.',
+  },
+  {
+    id: 'document_extraction',
+    label: 'Academic vault extraction',
+    description: 'Parses uploaded marksheets, certificates and transcripts into structured data.',
+  },
+  {
+    id: 'study_plan',
+    label: 'Study plan generation',
+    description: 'Builds a personalized 7-day study plan per student.',
+  },
+  {
+    id: 'weakness',
+    label: 'Weakness analysis',
+    description: 'Detects weak subjects / topics from quiz + academic data.',
+  },
+]
+
+export const DEFAULT_TASK_ROUTING = {
+  recommendation: { provider: 'groq', model: 'llama-3.1-70b-versatile', temperature: 0.3, maxTokens: 1024, enabled: true },
+  adaptive_quiz: { provider: 'google', model: 'gemini-1.5-flash', temperature: 0.7, maxTokens: 768, enabled: true },
+  tutor: { provider: 'groq', model: 'llama-3.1-70b-versatile', temperature: 0.6, maxTokens: 1536, enabled: true },
+  document_extraction: { provider: 'google', model: 'gemini-1.5-pro', temperature: 0.1, maxTokens: 2048, enabled: true },
+  study_plan: { provider: 'groq', model: 'llama-3.1-8b-instant', temperature: 0.5, maxTokens: 1024, enabled: true },
+  weakness: { provider: 'groq', model: 'gemma2-9b-it', temperature: 0.2, maxTokens: 512, enabled: true },
+}
+
+export const SEED_REVIEW_QUEUE = [
+  {
+    id: 'rv-1',
+    kind: 'question',
+    status: 'pending',
+    model: 'gemini-1.5-flash',
+    provider: 'google',
+    createdAt: '2026-04-19T01:40:00Z',
+    payload: {
+      question: 'Which sorting algorithm has an average time complexity of O(n log n) and is stable?',
+      options: ['Quick Sort', 'Merge Sort', 'Heap Sort', 'Selection Sort'],
+      correctIndex: 1,
+      difficulty: 'Medium',
+      topic: 'Algorithms',
+    },
+  },
+  {
+    id: 'rv-2',
+    kind: 'question',
+    status: 'pending',
+    model: 'gemini-1.5-flash',
+    provider: 'google',
+    createdAt: '2026-04-19T01:48:00Z',
+    payload: {
+      question: 'In microeconomics, a good with an income elasticity of demand greater than 1 is classified as…',
+      options: ['Inferior', 'Necessity', 'Luxury', 'Giffen'],
+      correctIndex: 2,
+      difficulty: 'Hard',
+      topic: 'Economics',
+    },
+  },
+  {
+    id: 'rv-3',
+    kind: 'recommendation',
+    status: 'pending',
+    model: 'llama-3.1-70b-versatile',
+    provider: 'groq',
+    createdAt: '2026-04-19T02:05:00Z',
+    payload: {
+      studentName: 'Aarav Sharma',
+      stream: 'Science',
+      role: 'Data Scientist',
+      confidence: 87,
+      rationale:
+        'Strong math + programming scores, active in analytics certifications, weak English writing not blocking for this role.',
+    },
+  },
+  {
+    id: 'rv-4',
+    kind: 'question',
+    status: 'pending',
+    model: 'gemma2-9b-it',
+    provider: 'groq',
+    createdAt: '2026-04-19T02:10:00Z',
+    payload: {
+      question: 'A projectile is launched at 30° with speed 20 m/s. Its horizontal range is closest to (g=10 m/s²)?',
+      options: ['17 m', '24 m', '35 m', '40 m'],
+      correctIndex: 2,
+      difficulty: 'Medium',
+      topic: 'Physics',
+    },
+  },
+  {
+    id: 'rv-5',
+    kind: 'recommendation',
+    status: 'pending',
+    model: 'llama-3.1-70b-versatile',
+    provider: 'groq',
+    createdAt: '2026-04-19T02:15:00Z',
+    payload: {
+      studentName: 'Priya Nair',
+      stream: 'Arts',
+      role: 'UX Designer',
+      confidence: 82,
+      rationale:
+        'Portfolio uploads + high interest-match for design thinking; aptitude shows visual reasoning strength.',
+    },
+  },
+]
+
+// Question bank for adaptive quiz (richer than the admin-managed quiz).
+export const ADAPTIVE_BANK = [
+  { id: 'ab-1', topic: 'Data Structures', difficulty: 1, question: 'Which data structure uses FIFO ordering?', options: ['Stack', 'Queue', 'Tree', 'Graph'], correctIndex: 1 },
+  { id: 'ab-2', topic: 'Data Structures', difficulty: 2, question: 'Average lookup time in a balanced BST with n nodes?', options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'], correctIndex: 1 },
+  { id: 'ab-3', topic: 'Data Structures', difficulty: 3, question: 'Amortized insert in a dynamic array (doubling strategy)?', options: ['O(1)', 'O(log n)', 'O(n)', 'O(n²)'], correctIndex: 0 },
+  { id: 'ab-4', topic: 'Algorithms', difficulty: 1, question: 'Binary search requires the array to be…', options: ['Sorted', 'Hashed', 'Indexed', 'Unique'], correctIndex: 0 },
+  { id: 'ab-5', topic: 'Algorithms', difficulty: 2, question: 'Average complexity of quicksort?', options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(log n)'], correctIndex: 1 },
+  { id: 'ab-6', topic: 'Algorithms', difficulty: 3, question: 'Which is NOT a greedy algorithm?', options: ['Dijkstra', 'Prim', 'Kruskal', 'Bellman-Ford'], correctIndex: 3 },
+  { id: 'ab-7', topic: 'Mathematics', difficulty: 1, question: 'd/dx of sin(x) is…', options: ['cos(x)', '-cos(x)', 'sin(x)', '-sin(x)'], correctIndex: 0 },
+  { id: 'ab-8', topic: 'Mathematics', difficulty: 2, question: '∫ 1/x dx equals…', options: ['x ln x', 'ln|x| + C', '1/(x²) + C', 'e^x + C'], correctIndex: 1 },
+  { id: 'ab-9', topic: 'Mathematics', difficulty: 3, question: 'A 3x3 matrix has det = 0. It is…', options: ['Invertible', 'Orthogonal', 'Singular', 'Symmetric'], correctIndex: 2 },
+  { id: 'ab-10', topic: 'Physics', difficulty: 1, question: 'SI unit of force?', options: ['Joule', 'Newton', 'Watt', 'Pascal'], correctIndex: 1 },
+  { id: 'ab-11', topic: 'Physics', difficulty: 2, question: 'Kinetic energy formula?', options: ['mv', '½mv²', 'mgh', 'mc²'], correctIndex: 1 },
+  { id: 'ab-12', topic: 'Physics', difficulty: 3, question: 'A photon has momentum…', options: ['h/λ', 'λ/h', 'hν', 'mc'], correctIndex: 0 },
+  { id: 'ab-13', topic: 'Economics', difficulty: 1, question: 'GDP stands for…', options: ['Gross Domestic Product', 'General Demand Price', 'Global Debt Pool', 'Gross Dynamic Product'], correctIndex: 0 },
+  { id: 'ab-14', topic: 'Economics', difficulty: 2, question: 'A monopoly is characterized by…', options: ['Many sellers', 'One seller', 'Perfect info', 'Free entry'], correctIndex: 1 },
+  { id: 'ab-15', topic: 'Economics', difficulty: 3, question: 'In perfect competition, long-run profit is…', options: ['Positive', 'Zero', 'Negative', 'Undefined'], correctIndex: 1 },
+]
+
 export const ANALYTICS = {
   streams: [
     { label: 'Science', value: 48 },

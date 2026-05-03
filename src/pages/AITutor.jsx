@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { BrainIcon, SendIcon, SparkleIcon } from '../components/icons'
+import { useAdmin } from '../context/AdminContext'
+import { AI_PROVIDERS_CATALOG } from '../data/admin'
 
 const PROMPTS = [
   'Explain photosynthesis like I’m 10',
@@ -43,6 +45,15 @@ export default function AITutor() {
   const [typing, setTyping] = useState(false)
   const listRef = useRef(null)
   const [params, setParams] = useSearchParams()
+  const { taskRouting, providers } = useAdmin()
+  const modelBadge = useMemo(() => {
+    const t = taskRouting?.tutor
+    if (!t?.enabled) return null
+    const p = providers?.[t.provider]
+    if (!p?.enabled || p.status !== 'connected') return null
+    const name = AI_PROVIDERS_CATALOG.find((x) => x.id === t.provider)?.name || t.provider
+    return `${name} · ${t.model}`
+  }, [taskRouting, providers])
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
@@ -85,6 +96,11 @@ export default function AITutor() {
               Ask anything. Short, clear, human answers.
             </p>
           </div>
+          {modelBadge && (
+            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-1 font-mono text-[11px] font-medium text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+              <SparkleIcon className="h-3 w-3" /> {modelBadge}
+            </span>
+          )}
         </div>
 
         <div className="eg-card flex h-[70vh] flex-col p-0">

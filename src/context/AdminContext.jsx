@@ -1,10 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {
   DEFAULT_AI_WEIGHTS,
+  DEFAULT_PROVIDERS,
+  DEFAULT_TASK_ROUTING,
   SEED_ACTIVITY,
   SEED_DOCUMENTS,
   SEED_JOBS,
   SEED_QUIZ,
+  SEED_REVIEW_QUEUE,
   SEED_USERS,
 } from '../data/admin'
 import { COURSES as SEED_COURSES } from '../data/courses'
@@ -28,6 +31,9 @@ function seed() {
     quiz: SEED_QUIZ,
     activity: SEED_ACTIVITY,
     aiWeights: DEFAULT_AI_WEIGHTS,
+    providers: DEFAULT_PROVIDERS,
+    taskRouting: DEFAULT_TASK_ROUTING,
+    reviewQueue: SEED_REVIEW_QUEUE,
   }
 }
 
@@ -129,6 +135,74 @@ export function AdminProvider({ children }) {
     setState((prev) => ({ ...prev, aiWeights: DEFAULT_AI_WEIGHTS }))
   }, [])
 
+  // Providers
+  const updateProvider = useCallback((id, patch) => {
+    setState((prev) => ({
+      ...prev,
+      providers: {
+        ...prev.providers,
+        [id]: {
+          ...(prev.providers[id] || {}),
+          ...patch,
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    }))
+  }, [])
+
+  // Task routing
+  const updateTaskRouting = useCallback((taskId, patch) => {
+    setState((prev) => ({
+      ...prev,
+      taskRouting: {
+        ...prev.taskRouting,
+        [taskId]: { ...(prev.taskRouting[taskId] || {}), ...patch },
+      },
+    }))
+  }, [])
+
+  // Review queue
+  const approveReviewItem = useCallback((id) => {
+    setState((prev) => {
+      const item = prev.reviewQueue.find((r) => r.id === id)
+      if (!item) return prev
+      let nextQuiz = prev.quiz
+      if (item.kind === 'question') {
+        nextQuiz = [
+          { ...item.payload, id: uid('q'), source: 'ai', model: item.model },
+          ...prev.quiz,
+        ]
+      }
+      return {
+        ...prev,
+        quiz: nextQuiz,
+        reviewQueue: prev.reviewQueue.map((r) =>
+          r.id === id ? { ...r, status: 'approved', reviewedAt: new Date().toISOString() } : r,
+        ),
+      }
+    })
+  }, [])
+  const rejectReviewItem = useCallback((id, reason = '') => {
+    setState((prev) => ({
+      ...prev,
+      reviewQueue: prev.reviewQueue.map((r) =>
+        r.id === id
+          ? { ...r, status: 'rejected', reason, reviewedAt: new Date().toISOString() }
+          : r,
+      ),
+    }))
+  }, [])
+  const regenerateReviewItem = useCallback((id) => {
+    setState((prev) => ({
+      ...prev,
+      reviewQueue: prev.reviewQueue.map((r) =>
+        r.id === id
+          ? { ...r, status: 'pending', regeneratedAt: new Date().toISOString() }
+          : r,
+      ),
+    }))
+  }, [])
+
   const resetAll = useCallback(() => {
     setState(seed())
   }, [])
@@ -147,6 +221,11 @@ export function AdminProvider({ children }) {
       deleteQuestion,
       setAIWeights,
       resetAIWeights,
+      updateProvider,
+      updateTaskRouting,
+      approveReviewItem,
+      rejectReviewItem,
+      regenerateReviewItem,
       resetAll,
     }),
     [
@@ -162,6 +241,11 @@ export function AdminProvider({ children }) {
       deleteQuestion,
       setAIWeights,
       resetAIWeights,
+      updateProvider,
+      updateTaskRouting,
+      approveReviewItem,
+      rejectReviewItem,
+      regenerateReviewItem,
       resetAll,
     ],
   )

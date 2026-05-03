@@ -8,6 +8,8 @@ import { AuthProvider } from './context/AuthContext.jsx'
 import { LearningProvider } from './context/LearningContext.jsx'
 import { VaultProvider } from './context/VaultContext.jsx'
 import { AdminProvider } from './context/AdminContext.jsx'
+import { PresenceProvider } from './context/PresenceContext.jsx'
+import { GamesProvider } from './context/GamesContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,7 +19,11 @@ createRoot(document.getElementById('root')).render(
           <LearningProvider>
             <VaultProvider>
               <AdminProvider>
-                <App />
+                <PresenceProvider>
+                  <GamesProvider>
+                    <App />
+                  </GamesProvider>
+                </PresenceProvider>
               </AdminProvider>
             </VaultProvider>
           </LearningProvider>
